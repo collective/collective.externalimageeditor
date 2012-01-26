@@ -6,4 +6,6 @@ src_type=git
 category=zope
 homepage=http://www.makina-corpus.com/
 description= a plone 4.1.3 buildout for externalimageeditor
-buildout_config=minitage-test-4.1.x.cfg
+buildout_config=minitage-test-4.2.x.cfg
+
+
