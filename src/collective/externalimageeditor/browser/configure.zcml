@@ -1,0 +1,37 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="collective.externalimageeditor">
+
+  <!-- ' collective.externalimageeditor' Zope 3 browser layer -->
+  <interface
+      interface=".interfaces.IThemeSpecific"
+      type="zope.publisher.interfaces.browser.IBrowserSkinType"
+      name="collective.externalimageeditor"
+    />
+
+  <!-- Viewlets registration -->
+
+  <!-- Zope 3 browser views -->
+  <!--
+    <browser:page
+        layer=".interfaces.IThemeSpecific"
+        for="collective.externalimageeditor.interface.mycontent"
+        name="MyView"
+        class=".view.MyView"
+        allowed_interface=".view.IMyView"
+        permission="zope2.View"
+      />
+  -->
+
+  <!-- Zope 3 browser resources -->
+
+  <!-- Resource directory -->
+  <browser:resourceDirectory
+      name="collective.externalimageeditor"
+      directory="resources"
+      layer=".interfaces.IThemeSpecific"
+    />
+
+  <!-- vim:set ft=xml: -->
+</configure>

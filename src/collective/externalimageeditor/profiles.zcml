@@ -1,0 +1,39 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="collective.externalimageeditor">
+  <!-- Include direct package dependencies -->
+  <genericsetup:registerProfile
+      name="qi"
+      title="collective Policy QI"
+      directory="profiles/qi"
+      description="Turn a Plone site into the collective QIINFO site."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+    />
+  <genericsetup:registerProfile
+      name="default"
+      title="collective Policy"
+      directory="profiles/default"
+      description="Turn a Plone site into the collective site."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+    />
+  <genericsetup:importStep
+      name="collective_externalimageeditor setupVarious"
+      title="various setup for externalimageeditor Policy"
+      description="description"
+      handler="collective.externalimageeditor.setuphandlers.setupVarious">
+    <depends name="content"/>
+  </genericsetup:importStep>
+  <!-- migration steps -->
+  <genericsetup:importStep
+      name="collective_externalimageeditor setupQi"
+      title="Quick Installer  setup for externalimageeditor Policy"
+      description="description"
+      handler="collective.externalimageeditor.setuphandlers.setupQi">
+    <depends name="content"/>
+  </genericsetup:importStep> 
+  <!-- -->
+  <utility factory=".app_config.HiddenProducts" name="collective.hiddenproducts"/>
+  <utility factory=".app_config.HiddenProfiles" name="collective.hiddenprofiles"/> 
+  <include package=".migrations"/>
+</configure> 
