@@ -1,10 +1,11 @@
+<?xml version="1.0"?>
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="collective.externalimageeditor">
   <genericsetup:registerProfile
-      name="10-11"
+      name="1011"
       title="collective.externalimageeditor  migration 10 to 11"
       description=""
       directory="profile"
