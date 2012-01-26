@@ -10,9 +10,9 @@ def read(*rnames):
     ).read()
 
 long_description = "\n\n".join(
-    [read('README.txt'),
-     read('docs', 'INSTALL.txt'),
-     read('docs', 'HISTORY.txt'),
+    [read('README.rst'),
+     read('docs', 'INSTALL.rst'),
+     read('docs', 'HISTORY.rst'),
     ]
 )
 
