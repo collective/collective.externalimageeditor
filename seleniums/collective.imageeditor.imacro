@@ -1,0 +1,13 @@
+VERSION BUILD=7401110 RECORDER=FX
+URL GOTO=http://localhost:8081/collect/Generic%20Plone%20addon
+TAG POS=1 TYPE=INPUT:TEXT FORM=ACTION:../process ATTR=NAME:project CONTENT=collective.externalimageeditor
+TAG POS=1 TYPE=INPUT:TEXT FORM=ACTION:../process ATTR=NAME:scm_type CONTENT=git
+TAG POS=1 TYPE=INPUT:TEXT FORM=ACTION:../process ATTR=NAME:project CONTENT=collective.externalimageeditor
+TAG POS=1 TYPE=INPUT:TEXT FORM=ACTION:../process ATTR=NAME:url CONTENT=http://www.makina-corpus.com/
+TAG POS=1 TYPE=INPUT:TEXT FORM=ACTION:../process ATTR=NAME:uri CONTENT=git@github.com:collective/collective.externalimageeditor.git
+TAG POS=1 TYPE=INPUT:TEXT FORM=ACTION:../process ATTR=NAME:keywords CONTENT=plone<SP>image<SP>editor
+TAG POS=1 TYPE=INPUT:TEXT FORM=ACTION:../process ATTR=NAME:http_port CONTENT=23225
+TAG POS=1 TYPE=INPUT:TEXT FORM=ACTION:../process ATTR=NAME:author CONTENT=kiorky
+TAG POS=1 TYPE=INPUT:TEXT FORM=ACTION:../process ATTR=NAME:author_email CONTENT=kiorky@cryptelium.net
+TAG POS=1 TYPE=INPUT:SUBMIT FORM=ACTION:../process ATTR=NAME:submit_cgwbDownload CONTENT="onclick=\"$('#submit_cgwbDownload').form.submit();\""
+        
