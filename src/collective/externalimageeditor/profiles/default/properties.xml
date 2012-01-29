@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <site>
+<!--
   <property name="title">collective</property>
   <property name="description">Welcome to the collective website</property> 
   <property name="email_from_address"
@@ -8,4 +9,5 @@
       type="string">Portal Administrator</property>
   <property name="validate_email" type="boolean">True</property>
   <property name="email_charset" type="string">utf-8</property>
+-->
 </site>

@@ -5,14 +5,6 @@
   <!-- QuickInstalled dependencies -->
       <dependency>profile-collective.externalimageeditor:qi</dependency>
   <!-- GenericSetup dependencies -->
-      <dependency>profile-plone.app.blob:default</dependency>
       <dependency>profile-plone.app.dexterity:default</dependency>
-      <dependency>profile-Products.TinyMCE:TinyMCE</dependency>
-      <dependency>profile-plone.app.z3cform:default</dependency>
-  <!-- Own Products -->
-      <!--
-        <dependency>profile-collective.tma:default</dependency>
-      -->
-      <dependency>profile-collective.skin:default</dependency>
  </dependencies>
 </metadata>

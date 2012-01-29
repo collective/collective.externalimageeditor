@@ -12,14 +12,14 @@
     />
   <genericsetup:registerProfile
       name="default"
-      title="collective Policy"
+      title="collective.externalimageeditor"
       directory="profiles/default"
-      description="Turn a Plone site into the collective site."
+      description="Install the collective.externalimageeditor addon on tbis plone site."
       provides="Products.GenericSetup.interfaces.EXTENSION"
     />
   <genericsetup:importStep
       name="collective_externalimageeditor setupVarious"
-      title="various setup for externalimageeditor Policy"
+      title="various setup for collective.externalimageeditor "
       description="description"
       handler="collective.externalimageeditor.setuphandlers.setupVarious">
     <depends name="content"/>
@@ -27,7 +27,7 @@
   <!-- migration steps -->
   <genericsetup:importStep
       name="collective_externalimageeditor setupQi"
-      title="Quick Installer  setup for externalimageeditor Policy"
+      title="Quick Installer products dependencies setup for collective.externalimageeditor"
       description="description"
       handler="collective.externalimageeditor.setuphandlers.setupQi">
     <depends name="content"/>

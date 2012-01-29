@@ -1,6 +1,11 @@
-from Products.PloneTestCase import PloneTestCase as ptc
+import unittest2 as unittest
 
-from collective.externalimageeditor.testing import layer 
+from collective.externalimageeditor.testing import (
+    COLLECTIVE_EXTERNALIMAGEEDITOR_FIXTURE as UNIT_TESTING,
+    COLLECTIVE_EXTERNALIMAGEEDITOR_INTEGRATION_TESTING as INTEGRATION_TESTING,
+    COLLECTIVE_EXTERNALIMAGEEDITOR_FUNCTIONAL_TESTING as FUNCTIONAL_TESTING,
+    COLLECTIVE_EXTERNALIMAGEEDITOR_SELENIUM_TESTING as SELENIUM_TESTING,
+)
 
 ################################################################################
 """
@@ -13,21 +18,29 @@ We do not use paster local commands (insert/update) as it cannot determine witch
 separe generated stuff and what is user specific
 
 
-Think to put "FAILS_ON_UNTESTED_ELEMENT" to True in testing.cfg for production mode or to test very strictly your code!
-This will issue errors for untested elements instead of just simple warnings !
-
 """
 ################################################################################
 
 
-class TestCase(ptc.PloneTestCase):
-    """We use this base class for all the tests in this package. 
+class TestCase(unittest.TestCase):
+    """We use this base class for all the tests in this package.
     If necessary, we can put common utility or setup code in here.
     """
-    layer = layer
+    layer = UNIT_TESTING
 
-class FunctionalTestCase(ptc.FunctionalTestCase):
+
+class IntegrationTestCase(TestCase):
+    """Integration base TestCase."""
+    layer = INTEGRATION_TESTING
+
+
+class FunctionalTestCase(TestCase):
     """Functionnal base TestCase."""
-    layer = layer
+    layer = FUNCTIONAL_TESTING
+
+
+class SeleniumTestCase(TestCase):
+    """Functionnal base TestCase."""
+    layer = SELENIUM_TESTING
 
 # vim:set ft=python:

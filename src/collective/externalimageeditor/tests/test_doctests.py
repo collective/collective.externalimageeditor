@@ -1,13 +1,11 @@
 """
 Launching all doctests in the tests directory using:
 
-    - The test_suite helper from the testing product
-    - the base layer in layer.py
+    - the base layer in testing.py
 
 """
 
 from collective.externalimageeditor.tests.base import FunctionalTestCase
-from collective.testing.tests.test_doctests import test_doctests_suite
 
 ################################################################################
 # GLOBALS avalaible in doctests
@@ -19,15 +17,44 @@ from collective.testing.tests.test_doctests import test_doctests_suite
 # and in your doctests, you can do:
 # >>> bar.something
 from collective.externalimageeditor.tests.globals import *
-from collective.externalimageeditor.tests import base
+from collective.externalimageeditor.testing import COLLECTIVE_EXTERNALIMAGEEDITOR_FUNCTIONAL_TESTING as FUNCTIONAL_TESTING
 ################################################################################
+
+
+import unittest2 as unittest
+import glob
+import os
+import logging
+import doctest
+from plone.testing import layered
+
+optionflags = (doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
 
 def test_suite():
     """."""
-    return test_doctests_suite(
-        __file__,
-        globs=globals(),
-        testklass=base.FunctionalTestCase
-    )
+    logger = logging.getLogger('collective.externalimageeditor.tests')
+    cwd = os.path.dirname(__file__)
+    files = []
+    try:
+        files = glob.glob(os.path.join(cwd, '*txt'))
+    except Exception,e:
+        logger.warn('No doctests for collective.externalimageeditor')
+    suite = unittest.TestSuite()
+    globs = globals()
+    for s in files:
+        suite.addTests([
+            layered(
+                doctest.DocFileSuite(
+                    s, 
+                    globs = globs,
+                    module_relative=False,
+                    optionflags=optionflags,         
+                ),
+                layer=FUNCTIONAL_TESTING
+            ),
+        ])
+    return suite
+    
+
 
 # vim:set ft=python:

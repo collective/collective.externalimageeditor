@@ -26,7 +26,7 @@ setup(
     namespace_packages=[         'collective',
          'collective.externalimageeditor',],
     version=version,
-    description='Project %s externalimageeditor product',
+    description='Project collective.externalimageeditor externalimageeditor product',
     long_description=long_description,
     classifiers=classifiers,
     keywords='plone image editor',
@@ -40,22 +40,18 @@ setup(
     install_requires=[
         'setuptools',
         'z3c.autoinclude',
+        'Plone',
+        'plone.app.upgrade',
         # with_ploneproduct_dexterity
         'z3c.blobfile',
         'plone.app.dexterity',
-        # with_ploneproduct_pz3cform
-        'five.grok',
-        'plone.app.z3cform',
-        'plone.directives.form',
-        'plone.z3cform',
         # -*- Extra requirements: -*-
-        'collective.testcaselayer',
     ],
+    extras_require = {
+        'test': ['plone.app.testing',]
+    }, 
     entry_points = {
-        'z3c.autoinclude.plugin': [
-            'target = plone',
-        ],
-
+        'z3c.autoinclude.plugin': ['target = plone',],
     },
 )
 # vim:set ft=python:

@@ -6,7 +6,7 @@
     i18n_domain="collective.externalimageeditor">
   <genericsetup:registerProfile
       name="1011"
-      title="collective.externalimageeditor  migration 10 to 11"
+      title="collective.externalimageeditor migration 10 to 11"
       description=""
       directory="profile"
       for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"

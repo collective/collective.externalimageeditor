@@ -4,7 +4,8 @@ from Products.CMFCore.utils import getToolByName
 
 from collective.externalimageeditor import app_config
 from collective.externalimageeditor.app_config import PRODUCT_DEPENDENCIES, EXTENSION_PROFILES
-)
+
+
 def setupVarious(context):
     """Miscellanous steps import handle.
     """

@@ -21,5 +21,5 @@ def upgrade(portal_setup):
     #                                    'profile-Products.PloneSurvey:default')
     migration_util.loadMigrationProfile(
         site,
-        'profile-${namespace}${ndot}${nested_namespace}.${project_name}.migrations.v11:1011')
+        'profile-collective.externalimageeditor.migrations.v11:1011')
 

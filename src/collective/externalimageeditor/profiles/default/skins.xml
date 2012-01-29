@@ -1,20 +1,12 @@
 <?xml version="1.0"?>
-<object name="portal_skins" allow_any="False" cookie_persistence="False">
-  <object name="collective_externalimageeditor_custom_images"
+<object name="portal_skins" allow_any="False" cookie_persistence="False" >
+<!-- activate this statement to include a zope2 skin directory
+  <object name="collective_externalimageeditor_custom"
       meta_type="Filesystem Directory View"
-      directory="collective.externalimageeditor:skins/collective_externalimageeditor_custom_images"/>
-  <object name="collective_externalimageeditor_custom_templates"
-      meta_type="Filesystem Directory View"
-      directory="collective.externalimageeditor:skins/collective_externalimageeditor_custom_templates"/>
-  <object name="collective_externalimageeditor_styles"
-      meta_type="Filesystem Directory View"
-      directory="collective.externalimageeditor:skins/collective_externalimageeditor_styles"/>
+      directory="collective.externalimageeditor:skins/collective_externalimageeditor_custom"/>
   <skin-path name="collective.externalimageeditor" based-on="Sunburst Theme">
-    <layer name="collective_externalimageeditor_custom_images"
+    <layer name="collective_externalimageeditor_custom"
         insert-after="custom"/>
-    <layer name="collective_externalimageeditor_custom_templates"
-        insert-after="collective_externalimageeditor_custom_images"/>
-    <layer name="collective_externalimageeditor_styles"
-        insert-after="collective_externalimageeditor_custom_templates"/>
   </skin-path>
+-->
 </object> 
