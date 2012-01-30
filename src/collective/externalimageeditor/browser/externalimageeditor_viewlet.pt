@@ -1,0 +1,10 @@
+<div class="externalimageeditor-links"
+  tal:define="portal_url context/portal_url">
+  <tal:for tal:repeat="link_infos view/data">
+    <a 
+      tal:condition="link_infos/url"
+      tal:attributes="href link_infos/url">
+      <img tal:attributes="src link_infos/icon;title link_infos/title"/>
+    </a>
+  </tal:for>
+</div>

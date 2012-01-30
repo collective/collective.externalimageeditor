@@ -1,4 +1,5 @@
+<?xml version="1.0"?>
 <layers>
-  <layer name="collective.externalimageeditor" remove="True"
-      interface="collective.externalimageeditor.browser.interfaces.IThemeSpecific"/>
+  <layer remove="true" name="collective.externalimageeditor-theme" interface="collective.externalimageeditor.interfaces.IThemeSpecific"/>
+  <layer remove="true" name="collective.externalimageeditor" interface="collective.externalimageeditor.interfaces.ILayer"/>
 </layers>

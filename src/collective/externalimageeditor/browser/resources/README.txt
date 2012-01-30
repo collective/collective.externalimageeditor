@@ -1,4 +1,4 @@
-README for the 'browser/images/' directory
+README for the 'collective.externalimageeditor/browser/resources/' directory
 ==========================================
 
 This folder is a Zope 3 Resource Directory acting as a repository for static resources

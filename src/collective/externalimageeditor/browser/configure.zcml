@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
@@ -5,17 +6,42 @@
 
   <!-- ' collective.externalimageeditor' Zope 3 browser layer -->
   <interface
-      interface=".interfaces.IThemeSpecific"
+      interface="collective.externalimageeditor.interfaces.IThemeSpecific"
       type="zope.publisher.interfaces.browser.IBrowserSkinType"
-      name="collective.externalimageeditor"
+      name="collective.externalimageeditor-theme"
     />
+  <interface name="collective.externalimageeditor" interface="collective.externalimageeditor.interfaces.ILayer" />
 
   <!-- Viewlets registration -->
+  <browser:viewlet
+      class=".viewlets.ExternalEditorViewlet"
+      name="externalimageeditor-links"
+      permission="cmf.ManagePortal"
+      layer="..interfaces.ILayer"
+      template="externalimageeditor_viewlet.pt"
+      manager="plone.app.layout.viewlets.interfaces.IAboveContentBody"
+    />
 
   <!-- Zope 3 browser views -->
+  <browser:page
+      layer="collective.externalimageeditor.interfaces.ILayer"
+      for="*"
+      name="externalimageeditor_save"
+      class=".methods.Save"
+      allowed_interface=".methods.ISave"
+      permission="cmf.ManagePortal"
+    />                     
+  <browser:page
+      layer="collective.externalimageeditor.interfaces.ILayer"
+      for="*"
+      name="externalimageeditor_edit"
+      class=".methods.Edit"
+      allowed_interface=".methods.IEdit"
+      permission="cmf.ManagePortal"
+    />                     
   <!--
     <browser:page
-        layer=".interfaces.IThemeSpecific"
+        layer="collective.externalimageeditor.interfaces.ILayer"
         for="collective.externalimageeditor.interface.mycontent"
         name="MyView"
         class=".view.MyView"
@@ -30,8 +56,7 @@
   <browser:resourceDirectory
       name="collective.externalimageeditor"
       directory="resources"
-      layer=".interfaces.IThemeSpecific"
+      layer="collective.externalimageeditor.interfaces.ILayer"
     />
-
   <!-- vim:set ft=xml: -->
 </configure>

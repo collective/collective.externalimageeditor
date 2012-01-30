@@ -1,4 +1,6 @@
 <?xml version="1.0"?>
 <object>
-
-</object> 
+  <order manager="plone.abovecontentbody" skinname="*">
+    <viewlet name="externalimageeditor-links" insert-after="*"/>
+  </order>
+</object>

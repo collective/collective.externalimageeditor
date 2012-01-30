@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <registry>
-  <!--
-    <records name="collective.externalimageeditor.interfaces.ISomeInterface.something" />
-  -->
+  <records
+  interface="collective.externalimageeditor.interfaces.IExternalimageeditorConfiguration"
+  prefix="collective.externalimageeditor.interfaces.IExternalimageeditorConfiguration"
+  />
 </registry>
