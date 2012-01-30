@@ -43,6 +43,11 @@
 </tr>
 <tr>
 	<td>type</td>
+	<td>css=input[name=&quot;description&quot;]</td>
+	<td>Addon product for plone to edit images on online webservices</td>
+</tr>
+<tr>
+	<td>type</td>
 	<td>css=input[name=&quot;keywords&quot;]</td>
 	<td>plone image editor</td>
 </tr>
