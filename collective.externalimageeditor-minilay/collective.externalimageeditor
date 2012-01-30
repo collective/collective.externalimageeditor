@@ -5,5 +5,7 @@ src_uri=git@github.com:collective/collective.externalimageeditor.git
 src_type=git
 category=zope
 homepage=http://www.makina-corpus.com/
-description= a plone 4.1 buildout for externalimageeditor
-buildout_config=minitage-test-4.1.x.cfg
+description= a plone buildout for externalimageeditor
+buildout_config=minitage-buildout.cfg
+
+
