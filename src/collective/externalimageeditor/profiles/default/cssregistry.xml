@@ -21,6 +21,6 @@
     available keys and default values.
   -->
   <!--
-    <javascript id="++resource++collective.externalimageeditor/something.css"/>
+    <stylesheet id="++resource++collective.externalimageeditor/something.css"/>
     --> 
 </object>

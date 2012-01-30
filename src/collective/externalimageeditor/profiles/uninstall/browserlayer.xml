@@ -1,0 +1,4 @@
+<layers>
+  <layer name="collective.externalimageeditor" remove="True"
+      interface="collective.externalimageeditor.browser.interfaces.IThemeSpecific"/>
+</layers>

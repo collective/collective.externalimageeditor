@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
@@ -17,6 +18,14 @@
       description="Install the collective.externalimageeditor addon on tbis plone site."
       provides="Products.GenericSetup.interfaces.EXTENSION"
     />
+  <genericsetup:registerProfile
+      title="collective.externalimageeditor uninstall" 
+      name="uninstall"
+      description="Uninstall the collective.externalimageeditor addon on tbis plone site."
+      directory="profiles/uninstall"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      />
   <genericsetup:importStep
       name="collective_externalimageeditor setupVarious"
       title="various setup for collective.externalimageeditor "

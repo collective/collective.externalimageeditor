@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<object name="portal_controlpanel"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="collective.externalimageeditor"
+    purge="False">
+<!--
+    <configlet 
+        title="collective.externalimageeditor Settings"
+        action_id="externalimageeditor"
+        appId="collective.externalimageeditor"
+        category="Products"
+        condition_expr=""
+        url_expr="string:${portal_url}/@@collective.externalimageeditor-settings"
+        icon_expr="string:${portal_url}/++resource++collective.externalimageeditor/collective.externalimageeditor_icon.png"
+        visible="True"
+        i18n:attributes="title">
+        <permission>Manage portal</permission>
+    </configlet>
+-->
+</object>

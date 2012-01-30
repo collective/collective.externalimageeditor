@@ -26,7 +26,7 @@ setup(
     namespace_packages=[         'collective',
          'collective.externalimageeditor',],
     version=version,
-    description='Project collective.externalimageeditor externalimageeditor product',
+    description='Project %s externalimageeditor product',
     long_description=long_description,
     classifiers=classifiers,
     keywords='plone image editor',
