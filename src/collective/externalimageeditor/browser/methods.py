@@ -11,7 +11,7 @@ from plone.registry.interfaces import IRegistry
 from collective.externalimageeditor import interfaces as i
 from collective.externalimageeditor.externalimageeditor import logger
 
-from zope.component import getAdapter, getMultiAdapter
+from zope.component import getAdapter, getMultiAdapter, queryMultiAdapter
 
 class ISave(interface.Interface):
     """Marker interface for ISave"""
@@ -27,6 +27,7 @@ class Save(BrowserView):
     """Save an image after being edited on a webservice"""
     interface.implements(ISave)
     def __call__(self, *args):
+        editor, ret = None,  ''
         form = self.request.form
         service = form.get('service', 'pixlr')
         context_url = self.context.absolute_url()
@@ -44,13 +45,21 @@ class Save(BrowserView):
             session = getMultiAdapter((self.context, self.request), i.IEditSessionHelper)
             if session.is_edited_by(service):
                 invalid = False
-                editor.save()
+                try:
+                    editor.save()
+                except Exception, e:
+                    ret = 'An error occured during image record: %s' % e
+                ret = 'image updated'
+            else:
+                ret = 'No edit session!'
         if invalid:
-            logger.info('Invalid edit proxy request!')
+            if not ret:
+                ret = 'Invalid edit proxy request!'
+            logger.info(ret)
         if IATImage.providedBy(self.context):
             context_url += "/view"
         self.request.response.redirect(context_url)
-        return '' 
+        return ret
 
 class Edit(BrowserView):
     """Redirect to a specific edit service"""
@@ -71,14 +80,7 @@ class Edit(BrowserView):
         service = form.get('service', 'pixlr')
         context_url = self.context.absolute_url()
         # edit with pixlr by default
-        try:
-            editor = getMultiAdapter((self.context, self.request), i.IExternalImageEditor, name = service)
-        except Exception, e:
-            logger.info(
-                'Invalid service or context: %s %s %s' % (
-                    e, self.context, service
-                )
-            )
+        editor = queryMultiAdapter((self.context, self.request), i.IExternalImageEditor, name = service)
         if editor is not None:
             url = editor.service_edit_url
             getMultiAdapter((self.context, self.request), i.IEditSessionHelper).register_edit_session(service)

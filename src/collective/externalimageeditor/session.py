@@ -13,6 +13,12 @@ from Products.CMFCore.utils import getToolByName
 from collective.externalimageeditor import interfaces as i
 
 KEY = 'COLLECTIVEEXTERNALIMAGE_ANNOTATIONS'
+
+
+class AnonymousException(Exception):
+    """User is not loggued in"""
+
+
 class EditSessionHelper(i.BaseAdapter):
     """See interface"""
     interface.implements(i.IEditSessionHelper)
@@ -26,12 +32,12 @@ class EditSessionHelper(i.BaseAdapter):
             username = member.getMemberId()
         return username
 
-    def want_user(self, user):
+    def want_user(self, user=None):
         if not user:
             user = self.get_user()
             if user is None:
-                raise Exception('invalid')  
-        return user 
+                raise AnonymousException('invalid')
+        return user
 
     @property
     def registry(self):

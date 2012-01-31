@@ -9,7 +9,7 @@ from zope.configuration import xmlconfig
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import PLONE_FIXTURE
-from plone.app.testing import IntegrationTesting, FunctionalTesting
+from plone.app.testing import IntegrationTesting as BIntegrationTesting, FunctionalTesting as BFunctionalTesting
 from plone.app.testing import TEST_USER_NAME, TEST_USER_ID
 from plone.app.testing import login
 from plone.app.testing import setRoles
@@ -19,13 +19,27 @@ from plone.testing import zodb, zca, z2
 TESTED_PRODUCTS = (\
 )
 
+from plone.app.testing import (
+    TEST_USER_ROLES,
+    TEST_USER_NAME,
+    TEST_USER_ID,
+    SITE_OWNER_NAME,
+)
+from plone.app.testing.helpers import (
+    login,
+    logout,
+)
+
+PLONE_MANAGER_NAME = 'Plone_manager'
+PLONE_MANAGER_ID = 'plonemanager'
+PLONE_MANAGER_PASSWORD = 'plonemanager'
 
 def print_contents(browser, dest='~/.browser.html'):
     """Print the browser contents somewhere for you to see its context
     in doctest pdb, type print_contents(browser) and that's it, open firefox
     with file://~/browser.html."""
     import os
-    open(os.path.expanduser(dest), 'w').write(browser.contents)  
+    open(os.path.expanduser(dest), 'w').write(browser.contents)
 
 class Browser(z2.Browser):
     def print_contents(browser, dest='~/.browser.html'):
@@ -80,15 +94,48 @@ class CollectiveExternalimageeditorLayer(PloneSandboxLayer):
         ztc.utils.setupCoreSessions(app)
 
     def setUpPloneSite(self, portal):
-        applyProfile(
-            portal,
-            'collective.externalimageeditor:default'
-        )
+        self.portal = portal
+        applyProfile(portal, 'collective.externalimageeditor:default')
 
+
+class LayerMixin(object):
+    defaultBases = (CollectiveExternalimageeditorLayer() ,)
+
+    def testSetUp(self):
+        self.add_user(
+            self['portal'],
+            PLONE_MANAGER_ID,
+            PLONE_MANAGER_NAME,
+            PLONE_MANAGER_PASSWORD,
+            ['Menager']+TEST_USER_ROLES)
+
+    def add_user(self, portal, id, username, password, roles=None):
+        if not roles: roles = TEST_USER_ROLES[:]
+        self.loginAsPortalOwner()
+        pas = portal['acl_users']
+        pas.source_users.addUser(id, username, password)
+        setRoles(portal, id, roles)
+        self.logout()
+
+    def loginAsPortalOwner(self):
+        z2.login(self['app']['acl_users'], SITE_OWNER_NAME)
+
+    def logout(self):
+        logout()
+
+class IntegrationTesting(LayerMixin, BIntegrationTesting):
+    def testSetUp(self):
+        BIntegrationTesting.testSetUp(self)
+        LayerMixin.testSetUp(self)
+
+class FunctionalTesting(LayerMixin, BFunctionalTesting):
+    def testSetUp(self):
+        BFunctionalTesting.testSetUp(self)
+        LayerMixin.testSetUp(self) 
 
 COLLECTIVE_EXTERNALIMAGEEDITOR_FIXTURE             = CollectiveExternalimageeditorLayer()
-COLLECTIVE_EXTERNALIMAGEEDITOR_INTEGRATION_TESTING = IntegrationTesting(bases = (COLLECTIVE_EXTERNALIMAGEEDITOR_FIXTURE,),name = "CollectiveExternalimageeditor:Integration")
-COLLECTIVE_EXTERNALIMAGEEDITOR_FUNCTIONAL_TESTING  = FunctionalTesting(bases = (COLLECTIVE_EXTERNALIMAGEEDITOR_FIXTURE,), name = "CollectiveExternalimageeditor:Functional")
+COLLECTIVE_EXTERNALIMAGEEDITOR_INTEGRATION_TESTING = IntegrationTesting(name = "CollectiveExternalimageeditor:Integration")
+COLLECTIVE_EXTERNALIMAGEEDITOR_FUNCTIONAL_TESTING  = FunctionalTesting( name = "CollectiveExternalimageeditor:Functional")
 COLLECTIVE_EXTERNALIMAGEEDITOR_SELENIUM_TESTING    = FunctionalTesting(bases = (SELENIUM_TESTING, COLLECTIVE_EXTERNALIMAGEEDITOR_FUNCTIONAL_TESTING,), name = "CollectiveExternalimageeditor:Selenium")
 
 # vim:set ft=python:

@@ -40,6 +40,7 @@ from zope.interface import implementedBy, providedBy
 from zope.interface.verify import verifyObject
 from zope.traversing.adapters import DefaultTraversable
 import zope
+from plone.testing import z2
 
 from Acquisition import aq_inner, aq_parent, aq_self
 
@@ -103,6 +104,18 @@ def preload(modules_or_module, excludelist=None):
     except Exception, e:
         print "Cant reload code: %s " % e
 
+from collective.externalimageeditor.testing import (
+    login,
+    logout,
+    TEST_USER_NAME,
+    TEST_USER_ROLES,
+    TEST_USER_ID,
+    SITE_OWNER_NAME,
+    print_contents,
+    PLONE_MANAGER_ID,
+    PLONE_MANAGER_NAME,
+    PLONE_MANAGER_PASSWORD,
+)
 # load user specific globals
 try: from collective.externalimageeditor.tests.user_globals import *
 except: pass
