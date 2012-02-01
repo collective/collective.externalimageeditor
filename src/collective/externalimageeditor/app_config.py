@@ -17,17 +17,12 @@ EXTENSION_PROFILES = ('collective.externalimageeditor:default',)
 
 SKIN = 'collective.skin'
 HIDDEN_PRODUCTS = [u'plone.app.openid', u'NuPlone',
-#      u'plone.app.dexterity',
-    #with_ploneproduct_dexterity
-
-#    u'plone.app.dexterity',
 #    u'collective.externalimageeditor.migrations.v1_1',
 #    u'collective.externalimageeditor.migrations',
 ]
 HIDDEN_PROFILES = [u'plone.app.openid', u'NuPlone',
     u'collective.externalimageeditor.migrations.v11',
     u'collective.externalimageeditor.migrations',
-      u'plone.app.dexterity',
 
 ]
 

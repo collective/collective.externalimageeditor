@@ -46,9 +46,6 @@ setup(
         'z3c.autoinclude',
         'Plone',
         'plone.app.upgrade',
-        # with_ploneproduct_dexterity
-        'z3c.blobfile',
-        'plone.app.dexterity',
         # -*- Extra requirements: -*-
     ],
     extras_require = {

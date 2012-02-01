@@ -4,7 +4,7 @@ Changelog
 1.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Remove dexterity useless dependency [kiorky]
 
 
 1.0 (2012-02-01)
