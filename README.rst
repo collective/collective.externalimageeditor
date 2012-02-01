@@ -4,6 +4,20 @@ Introduction
 
 .. contents::
 
+
+Description
+============
+
+This package will add a viewlet on Images with links to edit an image on external webservices.
+
+The activation of those services is controlled by settings in a specific control panel on the plone site setup.
+
+
+Currently, we support only pixlr but we plan to add fotoflexer and aviary.
+
+You can view a `Demo <http://www.youtube.com/watch?v=tCCJelVmYOE>`_.
+
+
 Credits
 ========
 Companies
@@ -25,4 +39,18 @@ Contributors
 -----------------
 
 
- 
+Repository
+------------
+
+- `GITHUB <https://github.com/collective/collective.externalimageeditor>`-
+
+
+TODO
+=====
+- integrate plone.protect in services url callbacks to protect image integration from CSRF attacks.
+- integrate some others services:
+
+      - fotoflexer
+      - aviary
+
+
