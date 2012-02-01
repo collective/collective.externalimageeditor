@@ -42,7 +42,7 @@ Contributors
 Repository
 ------------
 
-- `GITHUB <https://github.com/collective/collective.externalimageeditor>`-
+- `GITHUB <https://github.com/collective/collective.externalimageeditor>`_
 
 
 TODO

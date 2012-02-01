@@ -17,6 +17,10 @@ long_description = "\n\n".join(
 )
 
 classifiers = [
+    "Framework :: Plone",
+    "Framework :: Plone :: 4.0",
+    "Framework :: Plone :: 4.1",
+    "Framework :: Plone :: 4.2", 
     "Programming Language :: Python",
     "Topic :: Software Development",]
 
