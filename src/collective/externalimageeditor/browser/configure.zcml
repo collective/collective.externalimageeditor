@@ -30,7 +30,7 @@
       class=".methods.Save"
       allowed_interface=".methods.ISave"
       permission="cmf.ManagePortal"
-    />                     
+    />
   <browser:page
       layer="collective.externalimageeditor.interfaces.ILayer"
       for="*"
@@ -38,7 +38,16 @@
       class=".methods.Edit"
       allowed_interface=".methods.IEdit"
       permission="cmf.ManagePortal"
-    />                     
+    />
+  <!-- Zope 3 browser views -->
+  <browser:page
+      layer="collective.externalimageeditor.interfaces.ILayer"
+      for="*"
+      name="externalimageeditor_aviary"
+      class=".methods.Aviary"
+      allowed_interface=".methods.ISave"
+      permission="cmf.ManagePortal"
+    />
   <!--
     <browser:page
         layer="collective.externalimageeditor.interfaces.ILayer"

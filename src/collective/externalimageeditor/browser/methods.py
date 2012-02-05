@@ -3,6 +3,7 @@
 __docformat__ = 'restructuredtext en'
 
 import urllib
+from Acquisition import aq_inner
 from zope import component, interface
 from Products.Five import BrowserView
 from Products.CMFCore.utils import getToolByName
@@ -13,8 +14,11 @@ from collective.externalimageeditor.externalimageeditor import logger
 
 from zope.component import getAdapter, getMultiAdapter, queryMultiAdapter
 
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
 class ISave(interface.Interface):
     """Marker interface for ISave"""
+
 
 class IEdit(interface.Interface):
     """Marker interface for IEdit"""
@@ -22,6 +26,10 @@ class IEdit(interface.Interface):
         """Use the http get facility to edit an online image...
         You must be warned it doesn't work with localhost
         """
+
+class IAviary(IEdit):
+    """Marker interface for Aviary"""
+
 
 class Save(BrowserView):
     """Save an image after being edited on a webservice"""
@@ -58,12 +66,20 @@ class Save(BrowserView):
             logger.info(ret)
         if IATImage.providedBy(self.context):
             context_url += "/view"
-        self.request.response.redirect(context_url)
+        if service not in ['aviary']:
+            self.request.response.redirect(context_url)
         return ret
+
 
 class Edit(BrowserView):
     """Redirect to a specific edit service"""
-    interface.implements(IEdit)
+    interface.implements(IEdit)    
+
+    def get_lang(self):
+        context = aq_inner(self.context)
+        portal_state = getMultiAdapter((context, self.request), name=u'plone_portal_state')
+        current_language = portal_state.language()
+        return current_language
 
     def __call__(self, *args):
         islocalhost = (self.request.URL.startswith('http://localhost')
@@ -76,20 +92,90 @@ class Edit(BrowserView):
 
     def http_get_edit(self):
         """."""
+        ret = 'OK'
+        context_url = self.context.absolute_url()
         form = self.request.form
         service = form.get('service', 'pixlr')
-        context_url = self.context.absolute_url()
         # edit with pixlr by default
         editor = queryMultiAdapter((self.context, self.request), i.IExternalImageEditor, name = service)
         if editor is not None:
             url = editor.service_edit_url
             getMultiAdapter((self.context, self.request), i.IEditSessionHelper).register_edit_session(service)
         else:
-            logger.info('Invalid edit proxy request!')
+            ret = 'Invalid edit proxy request!'
+            logger.info(ret)
             url = context_url
             if IATImage.providedBy(self.context):
                 url += "/view"
         self.request.response.redirect(url)
-        return ''
+        return ret
+
+AVIARY_ED = """
+var featherEditor = new Aviary.Feather({
+    apiKey: '%(apikey)s',
+    apiVersion: 2,
+    language: '%(language)s',
+    tools: 'all',
+    hiresUrl: '%(image_url)s',
+    appendTo: '',
+    url: '%(image_preview)s',
+    onLoad: function() {
+        launchEditor('aviaryimage');
+        jQuery('#aviaryimage').click(function(e) {
+            launchEditor('aviaryimage');
+        })
+    },
+    onSave: function(imageID, newURL) {
+        $.post('%(callback)s',
+            {image:newURL, service:"aviary",},
+            function(data) {
+            var img = document.getElementById(imageID);
+            img.src = '%(image_preview)s'+'/?reload=1';
+        });
+    }
+});
+function launchEditor(id) {
+    featherEditor.launch({image:id});
+    return false;
+}
+"""
+
+class Aviary(Edit):
+    """Redirect to a specific edit service"""
+    interface.implements(IAviary)
+    template = ViewPageTemplateFile('aviary.pt')
+
+    def http_get_edit(self):
+        """Aviary use a javascript in our website to edit the image"""
+        ret = ''
+        form = self.request.form
+        service = 'aviary'
+        context_url = self.context.absolute_url()
+        editor = queryMultiAdapter((self.context, self.request), i.IExternalImageEditor, name = service)
+        lang = self.get_lang()
+        languages = ['en', 'de', 'fr', 
+                     'ja', 'it', 'nl', 
+                     'es', 'ru']
+        if editor.enabled:
+            here = self.context.absolute_url()
+            params = {
+                'language': (True==(lang in languages)) and lang or 'en',
+                'apikey': editor.key,
+                'apisecret': editor.secret,
+                'callback': '%s/%s' % (here, urllib.quote('@@externalimageeditor_save')),
+                'image_url': here,
+                'image_preview': "%s/image_preview"  % self.context.absolute_url(),
+            }
+            params['editor'] = AVIARY_ED % params
+            getMultiAdapter((self.context, self.request), i.IEditSessionHelper).register_edit_session(service)
+            return self.template(**params)
+        else:
+            ret = 'Invalid edit proxy request!'
+            logger.info(ret)
+            url = context_url
+            if IATImage.providedBy(self.context):
+                url += "/view"
+            self.request.response.redirect(url)
+        return ret
 
 # vim:set et sts=4 ts=4 tw=80:

@@ -40,5 +40,11 @@
       provides="collective.externalimageeditor.interfaces.IExternalImageEditor"
       factory="collective.externalimageeditor.services.PixlrEditor"
     />
+  <adapter
+      name="aviary"
+      for="zope.interface.Interface zope.publisher.interfaces.browser.IBrowserRequest"
+      provides="collective.externalimageeditor.interfaces.IExternalImageEditor"
+      factory="collective.externalimageeditor.services.AviaryEditor"
+    />
 </configure>
 <!-- vim:set ft=xml: -->

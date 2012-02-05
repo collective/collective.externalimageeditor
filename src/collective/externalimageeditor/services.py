@@ -26,8 +26,25 @@ class DownloadError(Exception):
 
 class ExternalImageEditor(i.BaseAdapter):
     interface.implements(i.IExternalImageEditor)
-    #ico = 'edit_12.png'
     ico = 'icofx_12.png'
+    @property
+    def settings(self):
+        registry = getUtility(IRegistry)
+        settings = registry.forInterface(
+            i.IExternalimageeditorConfiguration)
+        return settings
+
+    @property
+    def service_enabled(self):
+        return getattr(self.settings, 'has_%s'%self.name, False)
+
+    @property
+    def key(self):
+        return getattr(self.settings, '%s_key'%self.name, False)
+
+    @property
+    def secret(self):
+        return getattr(self.settings, '%s_secret'%self.name, False)
 
     def save(self):
         """Save the image"""
@@ -35,7 +52,7 @@ class ExternalImageEditor(i.BaseAdapter):
 
     def fetch(self, url):
         """download image and return dict object:
-            {'filename': ... , 'data':..., 'mimetype':...}
+        {'filename': ... , 'data':..., 'mimetype':...}
         """
         if not url: return
         def download():
@@ -61,10 +78,7 @@ class ExternalImageEditor(i.BaseAdapter):
 
     @property
     def enabled(self):
-        registry = getUtility(IRegistry)
-        settings = registry.forInterface(
-            i.IExternalimageeditorConfiguration)
-        return getattr(settings, 'has_%s'%self.name, False)
+        return self.service_enabled
 
     @property
     def edit_url(self):
@@ -102,15 +116,46 @@ class ExternalImageEditor(i.BaseAdapter):
         )
         notify(ObjectEditedEvent(self.context))
         IStatusMessage(self.request).addStatusMessage(_('Your image has been updated.'), 'info')
- 
+
 
 class IPixlrEditor(i.IExternalImageEditor):
     """Marker interface for pixlr adapter."""
+
+
+class IAviaryEditor(i.IExternalImageEditor):
+    """Marker interface for aviary adapter."""
+
 
 class PixlrEditor(ExternalImageEditor):
     interface.implements(IPixlrEditor)
     name = 'pixlr'
     ico = 'pixlr_12.png'
+
+    @property
+    def service_edit_url(self):
+        context, thisurl, url = self.context, '', ''
+        if IATImage.providedBy(self.context):
+            thisurl = self.context.absolute_url()
+            surl = 'http://www.pixlr.com/editor'
+            params = {
+                'image': thisurl,
+                "locktarget": "true",
+                "target": "%s/@@externalimageeditor_save?service=%s" % (thisurl, self.name),
+            }
+            url = '%s?%s' % (surl, urllib.urlencode(params))
+        return url
+
+
+class AviaryEditor(ExternalImageEditor):
+    interface.implements(IAviaryEditor)
+    name = 'aviary'
+    ico = 'aviary_12.png'
+    @property
+    def edit_url(self):
+        return  "%s/@@%s" % (
+            self.context.absolute_url(),
+            'externalimageeditor_aviary')
+
 
     @property
     def service_edit_url(self):
@@ -137,5 +182,10 @@ class PixlrEditor(ExternalImageEditor):
         if IATImage.providedBy(self.context):
             self.at_store(data)
 
+    @property
+    def enabled(self):
+        return (self.service_enabled
+                and self.key
+                and self.secret)
 
 # vim:set et sts=4 ts=4 tw=80:

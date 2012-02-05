@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xml:lang="en" lang="en"
+  i18n:domain="plone"
+  metal:use-macro="here/main_template/macros/master">
+  <head>
+    <metal:block fill-slot="javascript_head_slot">
+      <script type="text/javascript" src="http://feather.aviary.com/js/feather.js"></script>
+    </metal:block>
+    <metal:block fill-slot="style_slot">
+      <style type="text/css">
+        #aviaryimage:hover {
+        cursor:  pointer;
+        border: 2px solid black;
+        }
+      </style>
+    </metal:block>
+  </head>
+  <body>
+    <metal:content-core fill-slot="body">
+      <div id="aviaryimagecontainer">
+        <img id="aviaryimage" title="Edit this image with aviary" tal:attributes="src options/image_preview"/>
+      </div>
+      <script type="text/javascript" tal:content="structure options/editor"/>
+    </metal:content-core>
+  </body>
+</html>
