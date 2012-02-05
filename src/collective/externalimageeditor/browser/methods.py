@@ -3,7 +3,6 @@
 __docformat__ = 'restructuredtext en'
 
 import urllib
-from Acquisition import aq_inner
 from zope import component, interface
 from Products.Five import BrowserView
 from Products.CMFCore.utils import getToolByName
@@ -73,13 +72,8 @@ class Save(BrowserView):
 
 class Edit(BrowserView):
     """Redirect to a specific edit service"""
-    interface.implements(IEdit)    
+    interface.implements(IEdit)
 
-    def get_lang(self):
-        context = aq_inner(self.context)
-        portal_state = getMultiAdapter((context, self.request), name=u'plone_portal_state')
-        current_language = portal_state.language()
-        return current_language
 
     def __call__(self, *args):
         islocalhost = (self.request.URL.startswith('http://localhost')
@@ -152,14 +146,14 @@ class Aviary(Edit):
         service = 'aviary'
         context_url = self.context.absolute_url()
         editor = queryMultiAdapter((self.context, self.request), i.IExternalImageEditor, name = service)
-        lang = self.get_lang()
-        languages = ['en', 'de', 'fr', 
-                     'ja', 'it', 'nl', 
+        languages = ['en', 'de', 'fr',
+                     'ja', 'it', 'nl',
                      'es', 'ru']
         if editor.enabled:
+            lang = (True==(editor.lang in languages)) and editor.lang or 'en'
             here = self.context.absolute_url()
             params = {
-                'language': (True==(lang in languages)) and lang or 'en',
+                'language': lang,
                 'apikey': editor.key,
                 'apisecret': editor.secret,
                 'callback': '%s/%s' % (here, urllib.quote('@@externalimageeditor_save')),

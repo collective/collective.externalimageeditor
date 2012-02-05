@@ -46,5 +46,11 @@
       provides="collective.externalimageeditor.interfaces.IExternalImageEditor"
       factory="collective.externalimageeditor.services.AviaryEditor"
     />
+  <adapter
+      name="fotoflexer"
+      for="zope.interface.Interface zope.publisher.interfaces.browser.IBrowserRequest"
+      provides="collective.externalimageeditor.interfaces.IExternalImageEditor"
+      factory="collective.externalimageeditor.services.FotoFlexerEditor"
+    /> 
 </configure>
 <!-- vim:set ft=xml: -->

@@ -3,12 +3,14 @@
 __docformat__ = 'restructuredtext en'
 
 import time
+from Acquisition import aq_inner
 from StringIO import StringIO
 from datetime import datetime
 import urllib
 
 from zope import interface
 from zope.component import getUtility
+from zope.component import getAdapter, getMultiAdapter, queryMultiAdapter
 from zope.event import notify
 
 from Products.ATContentTypes.interfaces.image import IATImage
@@ -33,6 +35,13 @@ class ExternalImageEditor(i.BaseAdapter):
         settings = registry.forInterface(
             i.IExternalimageeditorConfiguration)
         return settings
+
+    @property
+    def lang(self):
+        context = aq_inner(self.context)
+        portal_state = getMultiAdapter((context, self.request), name=u'plone_portal_state')
+        current_language = portal_state.language()
+        return current_language
 
     @property
     def service_enabled(self):
@@ -125,6 +134,9 @@ class IPixlrEditor(i.IExternalImageEditor):
 class IAviaryEditor(i.IExternalImageEditor):
     """Marker interface for aviary adapter."""
 
+class IFotoFlexerEditor(i.IExternalImageEditor):
+    """Marker interface for fotoflexer adapter."""
+
 
 class PixlrEditor(ExternalImageEditor):
     interface.implements(IPixlrEditor)
@@ -145,6 +157,16 @@ class PixlrEditor(ExternalImageEditor):
             url = '%s?%s' % (surl, urllib.urlencode(params))
         return url
 
+    def save(self):
+        """Save the image"""
+        context, request, form = self.context, self.request, self.request.form
+        if not 'image' in form:
+            raise Exception('invalid request')
+        data = self.fetch(form['image'])
+        if not data:
+            raise Exception("image download fails")
+        if IATImage.providedBy(self.context):
+            self.at_store(data)
 
 class AviaryEditor(ExternalImageEditor):
     interface.implements(IAviaryEditor)
@@ -187,5 +209,58 @@ class AviaryEditor(ExternalImageEditor):
         return (self.service_enabled
                 and self.key
                 and self.secret)
+
+class FotoFlexerEditor(ExternalImageEditor):
+    interface.implements(IFotoFlexerEditor)
+    name = 'fotoflexer'
+    ico = 'fotoflexer_12.gif'
+    langs = {
+        'da': 'da-DK',
+        'de': 'de-DE',
+        'en': 'en-US',
+        'es': 'es-LA',
+        'fi': 'fi-FI',
+        'fr': 'fr-FR',
+        'it': 'it-IT',
+        'ja': 'ja-JP',
+        'ko': 'ko-KR',
+        'nb': 'nb-NO',
+        'nl': 'nl-NL',
+        'pl': 'pl-PL',
+        'pt': 'pt-PT',
+        'ru': 'ru-RU',
+        'sv': 'sv-SE',
+        'tu': 'tu-TR',
+        'vi': 'vi-VN',
+        'zh': 'zh-TW',
+    }
+
+    @property
+    def service_edit_url(self):
+        context, thisurl, url = self.context, '', ''
+        langk = (True==(self.lang in self.langs)) and self.lang or 'en'
+        lang = self.langs[langk]
+        if IATImage.providedBy(self.context):
+            thisurl = self.context.absolute_url()
+            surl = 'http://fotoflexer.com/API/API_Loader_v1_01.php'
+            params = {
+                'ff_image_url': thisurl,
+                'ff_cancel_url': "%s/view" % thisurl,
+                'ff_lang' : lang,
+                'ff_callback_url': "%s/@@externalimageeditor_save?service=%s" % (thisurl, self.name),
+            }
+            url = '%s?%s' % (surl, urllib.urlencode(params))
+        return url
+
+    def save(self):
+        """Save the image"""
+        context, request, form = self.context, self.request, self.request.form
+        if not 'image' in form:
+            raise Exception('invalid request')
+        data = self.fetch(form['image'])
+        if not data:
+            raise Exception("image download fails")
+        if IATImage.providedBy(self.context):
+            self.at_store(data)
 
 # vim:set et sts=4 ts=4 tw=80:
