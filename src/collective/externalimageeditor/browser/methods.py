@@ -2,18 +2,23 @@
 # -*- coding: utf-8 -*-
 __docformat__ = 'restructuredtext en'
 
+
 import urllib
+
 from zope import component, interface
+from zope.component import getAdapter, getMultiAdapter, queryMultiAdapter, getUtility
+
+
 from Products.Five import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 from Products.ATContentTypes.interfaces.image import IATImage
+
 from plone.registry.interfaces import IRegistry
+
 from collective.externalimageeditor import interfaces as i
 from collective.externalimageeditor.externalimageeditor import logger
 
-from zope.component import getAdapter, getMultiAdapter, queryMultiAdapter
-
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 class ISave(interface.Interface):
     """Marker interface for ISave"""
@@ -69,7 +74,6 @@ class Save(BrowserView):
             self.request.response.redirect(context_url)
         return ret
 
-
 class Edit(BrowserView):
     """Redirect to a specific edit service"""
     interface.implements(IEdit)
@@ -121,7 +125,7 @@ var featherEditor = new Aviary.Feather({
     },
     onSave: function(imageID, newURL) {
         $.post('%(callback)s',
-            {image:newURL, service:"aviary",},
+        {image:newURL, service:"aviary",_authenticator:'%(authenticator)s'},
             function(data) {
             var img = document.getElementById(imageID);
             img.src = '%(image_preview)s'+'/?reload=1';
@@ -155,6 +159,7 @@ class Aviary(Edit):
             params = {
                 'language': lang,
                 'apikey': editor.key,
+                'authenticator': editor.authenticator,
                 'apisecret': editor.secret,
                 'callback': '%s/%s' % (here, urllib.quote('@@externalimageeditor_save')),
                 'image_url': here,

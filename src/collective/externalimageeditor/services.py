@@ -6,19 +6,29 @@ import time
 from Acquisition import aq_inner
 from StringIO import StringIO
 from datetime import datetime
+
 import urllib
+import hmac
+try:
+    from hashlib import sha1 as sha
+except ImportError:
+    import sha
+ 
 
 from zope import interface
 from zope.component import getUtility
 from zope.component import getAdapter, getMultiAdapter, queryMultiAdapter
 from zope.event import notify
 
+from AccessControl import getSecurityManager
 from Products.ATContentTypes.interfaces.image import IATImage
 from Products.CMFCore.utils import getToolByName
 from Products.Archetypes.event import ObjectEditedEvent
 from Products.statusmessages.interfaces import IStatusMessage
 
 from plone.registry.interfaces import IRegistry
+from plone.keyring.interfaces import IKeyManager
+from plone.protect.authenticator import check
 
 from collective.externalimageeditor import interfaces as i
 from collective.externalimageeditor.externalimageeditor import MessageFactory as _, logger
@@ -26,9 +36,25 @@ from collective.externalimageeditor.externalimageeditor import MessageFactory as
 class DownloadError(Exception):
     """Download failed"""
 
+
+def _getUserName():
+    user=getSecurityManager().getUser()
+    if user is None:
+        return "Anonymous User"
+    return user.getUserName()
+ 
 class ExternalImageEditor(i.BaseAdapter):
     interface.implements(i.IExternalImageEditor)
     ico = 'icofx_12.png'
+
+    @property
+    def authenticator(self):
+        manager = getUtility(IKeyManager)
+        secret = manager.secret()
+        user = _getUserName()
+        auth = hmac.new(secret, user, sha).hexdigest() 
+        return auth
+
     @property
     def settings(self):
         registry = getUtility(IRegistry)
@@ -57,8 +83,15 @@ class ExternalImageEditor(i.BaseAdapter):
 
     def save(self):
         """Save the image"""
-        raise Exception('not implemented')
-
+        context, request, form = self.context, self.request, self.request.form
+        check(self.request) # raise an error if not authenficated
+        if not 'image' in form:
+            raise Exception('invalid request')
+        data = self.fetch(form['image'])
+        if not data:
+            raise Exception("image download fails")
+        if IATImage.providedBy(self.context):
+            self.at_store(data) 
     def fetch(self, url):
         """download image and return dict object:
         {'filename': ... , 'data':..., 'mimetype':...}
@@ -126,7 +159,6 @@ class ExternalImageEditor(i.BaseAdapter):
         notify(ObjectEditedEvent(self.context))
         IStatusMessage(self.request).addStatusMessage(_('Your image has been updated.'), 'info')
 
-
 class IPixlrEditor(i.IExternalImageEditor):
     """Marker interface for pixlr adapter."""
 
@@ -136,7 +168,6 @@ class IAviaryEditor(i.IExternalImageEditor):
 
 class IFotoFlexerEditor(i.IExternalImageEditor):
     """Marker interface for fotoflexer adapter."""
-
 
 class PixlrEditor(ExternalImageEditor):
     interface.implements(IPixlrEditor)
@@ -152,21 +183,10 @@ class PixlrEditor(ExternalImageEditor):
             params = {
                 'image': thisurl,
                 "locktarget": "true",
-                "target": "%s/@@externalimageeditor_save?service=%s" % (thisurl, self.name),
+                "target": "%s/@@externalimageeditor_save?service=%s&_authenticator=%s" % (thisurl, self.name, self.authenticator),
             }
             url = '%s?%s' % (surl, urllib.urlencode(params))
         return url
-
-    def save(self):
-        """Save the image"""
-        context, request, form = self.context, self.request, self.request.form
-        if not 'image' in form:
-            raise Exception('invalid request')
-        data = self.fetch(form['image'])
-        if not data:
-            raise Exception("image download fails")
-        if IATImage.providedBy(self.context):
-            self.at_store(data)
 
 class AviaryEditor(ExternalImageEditor):
     interface.implements(IAviaryEditor)
@@ -177,7 +197,6 @@ class AviaryEditor(ExternalImageEditor):
         return  "%s/@@%s" % (
             self.context.absolute_url(),
             'externalimageeditor_aviary')
-
 
     @property
     def service_edit_url(self):
@@ -192,17 +211,6 @@ class AviaryEditor(ExternalImageEditor):
             }
             url = '%s?%s' % (surl, urllib.urlencode(params))
         return url
-
-    def save(self):
-        """Save the image"""
-        context, request, form = self.context, self.request, self.request.form
-        if not 'image' in form:
-            raise Exception('invalid request')
-        data = self.fetch(form['image'])
-        if not data:
-            raise Exception("image download fails")
-        if IATImage.providedBy(self.context):
-            self.at_store(data)
 
     @property
     def enabled(self):
@@ -247,20 +255,9 @@ class FotoFlexerEditor(ExternalImageEditor):
                 'ff_image_url': thisurl,
                 'ff_cancel_url': "%s/view" % thisurl,
                 'ff_lang' : lang,
-                'ff_callback_url': "%s/@@externalimageeditor_save?service=%s" % (thisurl, self.name),
+                'ff_callback_url': "%s/@@externalimageeditor_save?service=%s&_authenticator=%s" % (thisurl, self.name, self.authenticator),
             }
             url = '%s?%s' % (surl, urllib.urlencode(params))
         return url
-
-    def save(self):
-        """Save the image"""
-        context, request, form = self.context, self.request, self.request.form
-        if not 'image' in form:
-            raise Exception('invalid request')
-        data = self.fetch(form['image'])
-        if not data:
-            raise Exception("image download fails")
-        if IATImage.providedBy(self.context):
-            self.at_store(data)
 
 # vim:set et sts=4 ts=4 tw=80:
