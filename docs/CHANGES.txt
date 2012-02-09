@@ -1,12 +1,13 @@
 Changelog
 =========
 
-1.1 (unreleased)
+1.4 (unreleased)
 ----------------
 
 - Remove dexterity useless dependency [kiorky]
 - Integrate aviary and fotoflexer [kiorky]
 - Integrate plone.protect  [kiorky]
+- Add support for archetypes image fields [kiorky]
 
 
 1.0 (2012-02-01)
