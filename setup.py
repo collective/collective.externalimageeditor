@@ -12,7 +12,7 @@ def read(*rnames):
 long_description = "\n\n".join(
     [read('README.rst'),
      read('docs', 'INSTALL.rst'),
-     read('docs', 'CHANGES.txt'),
+     read('docs', 'CHANGES.rst'),
     ]
 )
 
