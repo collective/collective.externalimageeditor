@@ -1,10 +1,38 @@
 <div class="externalimageeditor-links"
-  tal:define="portal_url context/portal_url">
-  <tal:for tal:repeat="link_infos view/data">
-    <a 
-      tal:condition="link_infos/url"
-      tal:attributes="href link_infos/url">
-      <img tal:attributes="src link_infos/icon;title link_infos/title"/>
-    </a>
+  tal:define="portal_url context/portal_url;
+  data view/data;contexts_info data/contexts_info">
+  <tal:for
+    tal:repeat="context_info python:contexts_info">
+    <div class="externalimageeditor"
+      tal:attributes="
+      style python:data['embedded_images'] and 'display:none' or '';
+      exteditor string:True;
+      exteditorid   python:context_info['c'].id();
+      exteditortype python:context_info['type']">
+      <tal:for tal:repeat="link_infos python:context_info['infos']">
+        <a
+          tal:condition="link_infos/url"
+          tal:attributes="href link_infos/url">
+          <img tal:attributes="src link_infos/icon;title link_infos/title"/>
+        </a>
+      </tal:for>
+    </div>
   </tal:for>
+  <script language="JavaScript" tal:condition="data/embedded_images">
+    function activate_embededexternalimageeditorlinks(e) {
+      jQuery('.externalimageeditor-links .externalimageeditor').each(
+      function(idx, i) {
+        var item = jQuery(i);
+        if ( item.attr('exteditortype') == 'atimage' ) {
+          var targetid = '#parent-fieldname-' + item.attr('exteditorid');
+          var target = jQuery(targetid);
+          if (target !== undefined) {
+            item.prependTo(target);
+            item.show();
+          }
+        }
+      });
+    }
+    jQuery(document).ready(activate_embededexternalimageeditorlinks);
+  </script>
 </div>

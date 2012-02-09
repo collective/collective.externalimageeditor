@@ -63,7 +63,9 @@ class Base(IntegrationTestCase):
         self.portal.invokeFactory('Folder', 'servicefolder')
         self.context = self.portal['servicefolder']
         self.context.invokeFactory('Image', 'save_img')
+        self.context.invokeFactory('News Item', 'mynews')
         self.img = self.context['save_img']
+        self.news = self.context['mynews']
         self.request = TestRequest()
         alsoProvides(self.request, IAttributeAnnotatable)
         self.activate_pixlr()
@@ -111,12 +113,13 @@ class TestEdit(Base):
         req.form['service'] = 'pixlr'
         view = Edit(self.img, req)
         view()
-        self.assertEquals(
-            req.response._redirect,
+        self.assertTrue(
+            req.response._redirect.startswith(
             'http://www.pixlr.com/editor?'
             'image=http%3A%2F%2Fnohost%2Fplone%2Fservicefolder%2Fsave_img'
             '&locktarget=true'
             '&target=http%3A%2F%2Fnohost%2Fplone%2Fservicefolder%2Fsave_img%2F%40%40externalimageeditor_save%3Fservice%3Dpixlr'
+            )
         )
 
 class TestSave(Base):
@@ -152,6 +155,16 @@ class TestSave(Base):
         ret = view()
         self.assertEquals(ret, 'image updated')
         self.assertEquals(req.response._redirect, 'http://nohost/plone/servicefolder/save_img/view')
+        ses = session.EditSessionHelper(self.news, req)
+        ses.register_edit_session('pixlr')
+        req.URL='http://foo'
+        req.form['service'] = 'pixlr'
+        req.form['image'] = 'file://%s' % imgpath
+        view = Save(self.news, req)
+        ret = view()
+        self.assertEquals(ret, 'image updated')
+        self.assertEquals(req.response._redirect, 'http://nohost/plone/servicefolder/mynews')
+ 
 
 def test_suite():
     """."""

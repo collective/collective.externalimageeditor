@@ -13,18 +13,23 @@ try:
     from hashlib import sha1 as sha
 except ImportError:
     import sha
- 
+
 
 from zope import interface
 from zope.component import getUtility
 from zope.component import getAdapter, getMultiAdapter, queryMultiAdapter
 from zope.event import notify
 
+from Acquisition import aq_inner, aq_parent
+
+
 from AccessControl import getSecurityManager
 from Products.ATContentTypes.interfaces.image import IATImage
 from Products.CMFCore.utils import getToolByName
 from Products.Archetypes.event import ObjectEditedEvent
+from Products.ATContentTypes.interfaces.interfaces import IATContentType
 from Products.statusmessages.interfaces import IStatusMessage
+from plone.app.linkintegrity.interfaces import IOFSImage
 
 from plone.registry.interfaces import IRegistry
 from plone.keyring.interfaces import IKeyManager
@@ -42,7 +47,7 @@ def _getUserName():
     if user is None:
         return "Anonymous User"
     return user.getUserName()
- 
+
 class ExternalImageEditor(i.BaseAdapter):
     interface.implements(i.IExternalImageEditor)
     ico = 'icofx_12.png'
@@ -52,7 +57,7 @@ class ExternalImageEditor(i.BaseAdapter):
         manager = getUtility(IKeyManager)
         secret = manager.secret()
         user = _getUserName()
-        auth = hmac.new(secret, user, sha).hexdigest() 
+        auth = hmac.new(secret, user, sha).hexdigest()
         return auth
 
     @property
@@ -91,7 +96,11 @@ class ExternalImageEditor(i.BaseAdapter):
         if not data:
             raise Exception("image download fails")
         if IATImage.providedBy(self.context):
-            self.at_store(data) 
+            self.at_store(self.context, data)
+        parent = aq_parent(self.context)
+        if IATContentType.providedBy(parent):
+            self.at_store(parent, data, self.context.id())
+
     def fetch(self, url):
         """download image and return dict object:
         {'filename': ... , 'data':..., 'mimetype':...}
@@ -144,19 +153,19 @@ class ExternalImageEditor(i.BaseAdapter):
             "url": self.edit_url,
         }
 
-    def at_store(self, image_info, field_name='image'):
+    def at_store(self, context, image_infos, field_name='image'):
         """Do the job to fetch image and update the context with it"""
         sio = StringIO()
-        sio.write(image_info['data'])
-        field = self.context.getField(field_name) or self.context.getPrimaryField()
+        sio.write(image_infos['data'])
+        field = context.getField(field_name) or context.getPrimaryField()
         field.set(
-            self.context,
-            image_info['data'],
-            mimetype=image_info['mimetype'],
-            filename=image_info['filename'],
+            context,
+            image_infos['data'],
+            mimetype=image_infos['mimetype'],
+            filename=image_infos['filename'],
             refresh_exif=False
         )
-        notify(ObjectEditedEvent(self.context))
+        notify(ObjectEditedEvent(context))
         IStatusMessage(self.request).addStatusMessage(_('Your image has been updated.'), 'info')
 
 class IPixlrEditor(i.IExternalImageEditor):
@@ -177,7 +186,8 @@ class PixlrEditor(ExternalImageEditor):
     @property
     def service_edit_url(self):
         context, thisurl, url = self.context, '', ''
-        if IATImage.providedBy(self.context):
+        if (IATImage.providedBy(self.context)
+            or IOFSImage.providedBy(self.context)):
             thisurl = self.context.absolute_url()
             surl = 'http://www.pixlr.com/editor'
             params = {
@@ -248,7 +258,8 @@ class FotoFlexerEditor(ExternalImageEditor):
         context, thisurl, url = self.context, '', ''
         langk = (True==(self.lang in self.langs)) and self.lang or 'en'
         lang = self.langs[langk]
-        if IATImage.providedBy(self.context):
+        if (IATImage.providedBy(self.context)
+            or IOFSImage.providedBy(self.context)):
             thisurl = self.context.absolute_url()
             surl = 'http://fotoflexer.com/API/API_Loader_v1_01.php'
             params = {

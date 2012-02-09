@@ -12,12 +12,17 @@ from zope.component import getAdapter, getMultiAdapter, queryMultiAdapter, getUt
 from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
+from plone.app.linkintegrity.interfaces import IOFSImage
 from Products.ATContentTypes.interfaces.image import IATImage
 
 from plone.registry.interfaces import IRegistry
 
 from collective.externalimageeditor import interfaces as i
 from collective.externalimageeditor.externalimageeditor import logger
+
+from Products.ATContentTypes.interfaces.interfaces import IATContentType
+
+from Acquisition import aq_parent
 
 
 class ISave(interface.Interface):
@@ -70,6 +75,11 @@ class Save(BrowserView):
             logger.info(ret)
         if IATImage.providedBy(self.context):
             context_url += "/view"
+        parent = aq_parent(self.context)
+
+        if (IATContentType.providedBy(parent)
+            and IOFSImage.providedBy(self.context)):
+            context_url = parent.absolute_url()
         if service not in ['aviary']:
             self.request.response.redirect(context_url)
         return ret
@@ -162,8 +172,8 @@ class Aviary(Edit):
                 'authenticator': editor.authenticator,
                 'apisecret': editor.secret,
                 'callback': '%s/%s' % (here, urllib.quote('@@externalimageeditor_save')),
-                'image_url': here,
-                'image_preview': "%s/image_preview"  % self.context.absolute_url(),
+                'image_url': self.image_url,
+                'image_preview': self.image_preview_url,
             }
             params['editor'] = AVIARY_ED % params
             getMultiAdapter((self.context, self.request), i.IEditSessionHelper).register_edit_session(service)
@@ -176,5 +186,15 @@ class Aviary(Edit):
                 url += "/view"
             self.request.response.redirect(url)
         return ret
+
+    @property
+    def image_url(self):
+        here = self.context.absolute_url()
+        return here
+
+    @property
+    def image_preview_url(self):
+        return self.image_url  + '_preview'
+
 
 # vim:set et sts=4 ts=4 tw=80:

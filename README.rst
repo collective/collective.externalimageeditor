@@ -8,7 +8,11 @@ Introduction
 Description
 ============
 
-This package will add a viewlet on Images with links to edit an image on external webservices.
+This package will add links on Images to edit them on external webservices.
+It works for:
+
+    - Archetypes image fields
+    - ATImages
 
 The activation of those services is controlled by settings in a specific control panel on the plone site setup.
 

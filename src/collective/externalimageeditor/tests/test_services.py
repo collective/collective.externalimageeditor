@@ -44,7 +44,9 @@ class TestService(IntegrationTestCase):
         self.portal.invokeFactory('Folder', 'servicefolder')
         self.context = self.portal['servicefolder']
         self.context.invokeFactory('Image', 'img')
+        self.context.invokeFactory('News Item', 'news')
         self.img = self.context['img']
+        self.news = self.context['news']
         self.request = TestRequest()
 
 
@@ -52,6 +54,7 @@ class TestService(IntegrationTestCase):
         self.service = s.ExternalImageEditor(self.context, self.request)
         self.pixlr  = s.PixlrEditor(self.context, self.request)
         self.iservice = s.ExternalImageEditor(self.img, self.request)
+        self.nservice = s.ExternalImageEditor(self.news, self.request)
         self.ipixlr  = s.PixlrEditor(self.img, self.request) 
         self.logout()
 
@@ -65,13 +68,16 @@ class TestService(IntegrationTestCase):
         self.assertRaises(Exception, self.service.save)
 
     def test_at_store(self):
+        self.loginAsPortalOwner()
         data  = {
             'data': open(imgpath).read(),
             'mimetype': 'image/png',
             'filename': 'foo.png',
         }
-        self.iservice.at_store(data)
+        self.iservice.at_store(self.iservice.context, data)
         self.assertEquals(self.img.data, data['data'])
+        self.nservice.at_store(self.nservice.context, data)
+        self.assertEquals(self.news.data, data['data']) 
         self.assertTrue(
             'Your image has been updated' in re.sub(
                 'statusmessages="([^=]+==).*', '\\1', 
@@ -80,6 +86,7 @@ class TestService(IntegrationTestCase):
                 )['Set-Cookie']
             ).decode('base64')
         )
+        self.logout()
 
     def test_fetch(self):
         data = self.iservice.fetch('file://%s' % imgpath)
@@ -101,14 +108,15 @@ class TestService(IntegrationTestCase):
             self.pixlr.edit_url, 
             'http://nohost/plone/servicefolder/'
             '@@externalimageeditor_edit?service=pixlr')
-        self.assertEquals(
-            self.ipixlr.service_edit_url, 
+        self.assertTrue(
+            self.ipixlr.service_edit_url.startswith(
             'http://www.pixlr.com/editor?'
             'image=http%3A%2F%2Fnohost%2Fplone%2Fservicefolder%2Fimg'
             '&locktarget=true'
             '&target=http%3A%2F%2Fnohost%2Fplone'
             '%2Fservicefolder%2Fimg%2F%40%40externalimageeditor_save'
             '%3Fservice%3Dpixlr')
+        )
 
     @property
     def registry(self):
