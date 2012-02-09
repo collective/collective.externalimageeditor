@@ -2,7 +2,7 @@ import os, sys
 
 from setuptools import setup, find_packages
 
-version = '1.3dev'
+version = '1.5.dev0'
 
 def read(*rnames):
     return open(
@@ -12,7 +12,7 @@ def read(*rnames):
 long_description = "\n\n".join(
     [read('README.rst'),
      read('docs', 'INSTALL.rst'),
-     read('docs', 'CHANGES.rst'),
+     read('docs', 'CHANGES.txt'),
     ]
 )
 
