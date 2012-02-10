@@ -15,7 +15,7 @@
       name="default"
       title="collective.externalimageeditor"
       directory="profiles/default"
-      description="Install the collective.externalimageeditor addon on tbis plone site."
+      description="Install the collective.externalimageeditor addon on this plone site."
       provides="Products.GenericSetup.interfaces.EXTENSION"
     />
   <genericsetup:registerProfile
