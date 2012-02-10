@@ -2,7 +2,7 @@ import os, sys
 
 from setuptools import setup, find_packages
 
-version = '1.6.dev0'
+version = u'1.0'
 
 def read(*rnames):
     return open(
@@ -20,7 +20,7 @@ classifiers = [
     "Framework :: Plone",
     "Framework :: Plone :: 4.0",
     "Framework :: Plone :: 4.1",
-    "Framework :: Plone :: 4.2", 
+    "Framework :: Plone :: 4.2",
     "Programming Language :: Python",
     "Topic :: Software Development",]
 
@@ -28,7 +28,7 @@ name = 'collective.externalimageeditor'
 setup(
     name=name,
     namespace_packages=[         'collective',
-         'collective.externalimageeditor',],
+    ],
     version=version,
     description='Addon product for plone to edit images on online webservices',
     long_description=long_description,
@@ -50,7 +50,7 @@ setup(
     ],
     extras_require = {
         'test': ['plone.app.testing',]
-    }, 
+    },
     entry_points = {
         'z3c.autoinclude.plugin': ['target = plone',],
     },
