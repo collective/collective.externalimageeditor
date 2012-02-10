@@ -3,7 +3,7 @@ from zope import interface, schema
 from plone.theme.interfaces import IDefaultPloneLayer
 from Products.CMFCore.utils import getToolByName
 
-from collective.externalimageeditor.externalimageeditor import MessageFactory as _
+from collective.externalimageeditor import MessageFactory as _
 
 class IMyPortalUser(IPropertiedUser):
     """ Marker interface implemented by users in my portal. """

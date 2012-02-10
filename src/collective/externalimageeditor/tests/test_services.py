@@ -8,9 +8,9 @@ import unittest2 as unittest
 from persistent.mapping import PersistentMapping
 from StringIO import StringIO
 from zope.interface import alsoProvides
-from zope.annotation.interfaces import IAttributeAnnotatable 
+from zope.annotation.interfaces import IAttributeAnnotatable
 from zope.component import getUtility
-from plone.registry.interfaces import IRegistry 
+from plone.registry.interfaces import IRegistry
 
 from base import (
     IntegrationTestCase,
@@ -29,7 +29,7 @@ from plone.app.testing.helpers import (
     login,
     TEST_USER_NAME,
     logout,
-)               
+)
 
 from pkg_resources import resource_filename
 
@@ -55,7 +55,7 @@ class TestService(IntegrationTestCase):
         self.pixlr  = s.PixlrEditor(self.context, self.request)
         self.iservice = s.ExternalImageEditor(self.img, self.request)
         self.nservice = s.ExternalImageEditor(self.news, self.request)
-        self.ipixlr  = s.PixlrEditor(self.img, self.request) 
+        self.ipixlr  = s.PixlrEditor(self.img, self.request)
         self.logout()
 
     def tearDown(self):
@@ -77,10 +77,10 @@ class TestService(IntegrationTestCase):
         self.iservice.at_store(self.iservice.context, data)
         self.assertEquals(self.img.data, data['data'])
         self.nservice.at_store(self.nservice.context, data)
-        self.assertEquals(self.news.data, data['data']) 
+        self.assertEquals(self.news['image'].data, data['data'])
         self.assertTrue(
             'Your image has been updated' in re.sub(
-                'statusmessages="([^=]+==).*', '\\1', 
+                'statusmessages="([^=]+==).*', '\\1',
                 dict(
                     self.request.response.getHeaders()
                 )['Set-Cookie']
@@ -98,14 +98,14 @@ class TestService(IntegrationTestCase):
 
     def test_pixlr_infos(self):
         self.assertEquals(
-            self.ipixlr.get_ico, 
+            self.ipixlr.get_ico,
             'http://nohost/plone/'
             '++resource++collective.externalimageeditor'
             '/pixlr_12.png')
         self.assertTrue(
             self.pixlr.link_infos['title'], u'Edit with pixlr.')
         self.assertTrue(
-            self.pixlr.edit_url, 
+            self.pixlr.edit_url,
             'http://nohost/plone/servicefolder/'
             '@@externalimageeditor_edit?service=pixlr')
         self.assertTrue(
@@ -122,7 +122,7 @@ class TestService(IntegrationTestCase):
     def registry(self):
         registry = getUtility(IRegistry)
         settings = registry.forInterface(
-            i.IExternalimageeditorConfiguration) 
+            i.IExternalimageeditorConfiguration)
         return settings
 
     def test_enabled(self):
@@ -133,7 +133,7 @@ class TestService(IntegrationTestCase):
 
     def activate_pixlr(self):
         self.registry.has_pixlr = True
-                        
+
     def deactivate_pixlr(self):
         self.registry.has_pixlr = False
 
@@ -144,4 +144,4 @@ def test_suite():
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromName(
             __name__))
-    return suite 
+    return suite

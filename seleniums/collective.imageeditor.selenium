@@ -28,18 +28,23 @@
 </tr>
 <tr>
 	<td>type</td>
+	<td>name=uri</td>
+	<td>git@github.com:collective/collective.externalimageeditor.git</td>
+</tr>
+<tr>
+	<td>type</td>
 	<td>name=project</td>
 	<td>collective.externalimageeditor</td>
 </tr>
 <tr>
-	<td>type</td>
-	<td>name=url</td>
-	<td>http://www.makina-corpus.com/</td>
+	<td>click</td>
+	<td>name=with_ploneproduct_dexterity</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>name=uri</td>
-	<td>git@github.com:collective/collective.externalimageeditor.git</td>
+	<td>name=homepage</td>
+	<td>http://www.makina-corpus.com/</td>
 </tr>
 <tr>
 	<td>type</td>

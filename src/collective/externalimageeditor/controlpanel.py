@@ -1,7 +1,7 @@
 from plone.app.registry.browser.controlpanel import RegistryEditForm
 from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
 
-from collective.externalimageeditor.externalimageeditor import MessageFactory as _
+from collective.externalimageeditor import MessageFactory as _
 from collective.externalimageeditor.interfaces import IExternalimageeditorConfiguration
 from plone.z3cform import layout
 

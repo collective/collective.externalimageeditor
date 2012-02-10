@@ -9,7 +9,7 @@
   <include package="Products.Five" file="configure.zcml"/>
   <include package="Products.CMFCore" file="permissions.zcml" />
   <!-- Load the ZCML configuration for the collective.externalimageeditor package.-->
-  <five:registerPackage package="." initialize=".externalimageeditor.initialize" />
+  <five:registerPackage package="." initialize=".initialize" />
   <include package="z3c.autoinclude" file="meta.zcml" />
   <!-- activate to customize the dashboard-->
   <!-- <adapter factory=".dashboard.MyPortalDefaultDashboard"/>-->

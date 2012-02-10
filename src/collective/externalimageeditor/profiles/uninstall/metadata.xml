@@ -4,5 +4,6 @@
   <dependencies>
   <!-- QuickInstalled dependencies -->
       <dependency>profile-collective.externalimageeditor:qi</dependency>
+  <!-- GenericSetup dependencies -->
  </dependencies>
 </metadata>

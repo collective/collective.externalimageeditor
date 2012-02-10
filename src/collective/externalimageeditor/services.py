@@ -36,7 +36,7 @@ from plone.keyring.interfaces import IKeyManager
 from plone.protect.authenticator import check
 
 from collective.externalimageeditor import interfaces as i
-from collective.externalimageeditor.externalimageeditor import MessageFactory as _, logger
+from collective.externalimageeditor import MessageFactory as _, logger
 
 class DownloadError(Exception):
     """Download failed"""

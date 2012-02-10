@@ -21,6 +21,8 @@ class TestSetup(IntegrationTestCase):
 def test_suite():
     """."""
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestSetup))
-    return suite
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromName(
+            __name__))
+    return suite  
 

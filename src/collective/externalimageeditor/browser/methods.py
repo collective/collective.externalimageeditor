@@ -18,7 +18,7 @@ from Products.ATContentTypes.interfaces.image import IATImage
 from plone.registry.interfaces import IRegistry
 
 from collective.externalimageeditor import interfaces as i
-from collective.externalimageeditor.externalimageeditor import logger
+from collective.externalimageeditor import logger
 
 from Products.ATContentTypes.interfaces.interfaces import IATContentType
 
