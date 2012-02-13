@@ -11,4 +11,5 @@ files="
 for f in $files;do
     rsync -aKzv t/$PROJECT/$f $f
 done
+find t -name CHANG* -delete
 # vim:set et sts=4 ts=4 tw=80: 
