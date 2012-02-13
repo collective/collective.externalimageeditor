@@ -4,7 +4,7 @@ Changelog
 1.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fix https://github.com/collective/collective.externalimageeditor/issues/1
 
 
 1.5 (2012-02-09)

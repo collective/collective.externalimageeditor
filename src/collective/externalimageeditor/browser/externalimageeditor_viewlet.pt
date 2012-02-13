@@ -7,7 +7,7 @@
       tal:attributes="
       style python:data['embedded_images'] and 'display:none' or '';
       exteditor string:True;
-      exteditorid   python:context_info['c'].id();
+      exteditorid   python:context_info['c'].getId();
       exteditortype python:context_info['type']">
       <tal:for tal:repeat="link_infos python:context_info['infos']">
         <a
