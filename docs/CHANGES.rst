@@ -1,7 +1,7 @@
 Changelog
 ==========
 
-1.6 (unreleased)
+1.6 (2012-02-13)
 ----------------
 
 - Fix https://github.com/collective/collective.externalimageeditor/issues/1
