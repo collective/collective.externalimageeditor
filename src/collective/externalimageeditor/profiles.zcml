@@ -42,7 +42,7 @@
     <depends name="content"/>
   </genericsetup:importStep> 
   <!-- -->
-  <utility factory=".app_config.HiddenProducts" name="collective.hiddenproducts"/>
-  <utility factory=".app_config.HiddenProfiles" name="collective.hiddenprofiles"/> 
+  <utility factory=".app_config.HiddenProducts" name="collective.externalimageeditor.hiddenproducts"/>
+  <utility factory=".app_config.HiddenProfiles" name="collective.externalimageeditor.hiddenprofiles"/> 
   <include package=".migrations"/>
 </configure> 

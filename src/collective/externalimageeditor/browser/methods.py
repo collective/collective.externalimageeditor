@@ -131,7 +131,7 @@ var featherEditor = new Aviary.Feather({
         launchEditor('aviaryimage');
         jQuery('#aviaryimage').click(function(e) {
             launchEditor('aviaryimage');
-        })
+        });
     },
     onSave: function(imageID, newURL) {
         $.post('%(callback)s',
@@ -194,7 +194,11 @@ class Aviary(Edit):
 
     @property
     def image_preview_url(self):
-        return self.image_url  + '_preview'
+        try:
+            return self.context.restrictedTraverse(
+                'image_preview').absolute_url()
+        except:
+            return self.image_url  + '_preview'
 
 
 # vim:set et sts=4 ts=4 tw=80:
