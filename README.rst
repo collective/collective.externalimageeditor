@@ -39,7 +39,6 @@ Companies
 Authors
 ------------
 
-- kiorky  <kiorky@cryptelium.net>
 
 Contributors
 -----------------
